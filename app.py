@@ -4,12 +4,12 @@ from datetime import datetime
 import tempfile
 import os
 
-# 1. LA LLAVE MÁGICA: Ahora la busca en la caja fuerte de Streamlit
+# LA LLAVE MÁGICA: Ahora la busca en la caja fuerte de Streamlit
 API_KEY = st.secrets["GOOGLE_API_KEY"] 
 genai.configure(api_key=API_KEY)
 modelo = genai.GenerativeModel('gemini-2.5-flash')
 
-# 2. DISEÑO DEL CONSULTORIO
+# DISEÑO DEL CONSULTORIO
 st.title("Mi Escriba Médico AI 🩺🎙️")
 st.write("Sube una nota de voz de tu celular o graba en vivo para crear tu nota clínica.")
 st.divider()
@@ -36,23 +36,21 @@ else:
 
 st.divider()
 
-# 3. EL BOTÓN MÁGICO ACTUALIZADO PARA AUDIOS LARGOS
 if st.button("Generar Nota Clínica"):
     if audio_para_procesar is not None:
-        with st.spinner("Subiendo audio al servidor y redactando la nota... Esto puede tomar un minuto para audios largos ⏳"):
+        with st.spinner("Subiendo audio y redactando la nota... Esto puede tomar un minuto para audios largos ⏳"):
             try:
                 fecha_hoy = datetime.now().strftime("%d de %B del %Y")
                 
-                # A) CÓDIGO NUEVO PARA AUDIOS PESADOS: Crear un archivo temporal
+                # CÓDIGO NUEVO PARA AUDIOS PESADOS
                 with tempfile.NamedTemporaryFile(delete=False, suffix=extension) as tmp_file:
                     tmp_file.write(audio_para_procesar)
                     ruta_temporal = tmp_file.name
                     
-                # B) Subir usando el sistema de Archivos Grandes de Google
                 archivo_gemini = genai.upload_file(ruta_temporal, mime_type=tipo_de_archivo)
                 
-                # C) Instrucción clínica
-               instruccion = f"""
+                # INSTRUCCIÓN CLÍNICA AVANZADA
+                instruccion = f"""
                 Eres un médico endocrinólogo experto. La fecha de hoy es {fecha_hoy}.
                 Escucha esta grabación de voz y redacta una nota clínica SOAP altamente estructurada y profesional.
                 
@@ -92,14 +90,13 @@ if st.button("Generar Nota Clínica"):
                 NO inventes datos, medidas ni medicamentos que no se mencionen en el audio. Si falta información para algún apartado, omítelo sin inventar relleno.
                 """
                 
-                # D) Analizar y generar respuesta
                 respuesta = modelo.generate_content([instruccion, archivo_gemini])
                 
                 st.success("¡Nota generada con éxito!")
                 st.markdown("### Resultado:")
                 st.write(respuesta.text)
                 
-                # E) Limpiar la memoria borrando el archivo temporal
+                # Limpiar la memoria
                 os.remove(ruta_temporal)
                 genai.delete_file(archivo_gemini.name)
                 
