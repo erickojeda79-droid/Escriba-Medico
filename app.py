@@ -49,7 +49,7 @@ if st.button("Generar Nota Clínica"):
                     
                 archivo_gemini = genai.upload_file(ruta_temporal, mime_type=tipo_de_archivo)
                 
-                # INSTRUCCIÓN CLÍNICA AVANZADA
+                # INSTRUCCIÓN CLÍNICA AVANZADA Y LINEAL
                 instruccion = f"""
                 Eres un médico endocrinólogo experto. La fecha de hoy es {fecha_hoy}.
                 Escucha esta grabación de voz y redacta una nota clínica SOAP altamente estructurada y profesional.
@@ -67,25 +67,25 @@ if st.button("Generar Nota Clínica"):
                 
                 2. O: OBJETIVO:
                    - Exploración física y signos vitales.
-                   - Laboratorios: Formato LINEAL y en párrafo continuo. Agrúpalos por fecha completa (DD.MM.AAAA). REGLA ESTRICTA: NO interpretes los resultados (prohibido usar términos como elevado, disminuido o normal) a menos que el médico haya dictado explícitamente los rangos de referencia, en cuyo caso pon los rangos entre paréntesis junto al valor.
-                   - Gabinetes e Imagen:
-                     - USG Tiroides/Cuello: Fecha (DD.MM.AAAA) y región. Describir volumen y medidas de LTD, LTI e ISTMO. Si hay nódulos, numéralos con letras (Nódulo A, Nódulo B). Por cada nódulo detalla: medida, composición, ecogenicidad, forma (más ancho que alto / más alto que ancho), márgenes y focos ecogénicos. Calcula y anota el ACR TI-RADS basándote en estas características, a menos que el médico ya dicte un TI-RADS específico.
-                     - TAC/RM: Fecha (DD.MM.AAAA), región, y especificar si es simple o contrastada. En RM de cráneo/silla turca: anotar medidas, masas, afección de vía visual/quiasma óptico, y escalas de Knosp o Hardy si se dictan.
-                     - Reporte Histopatológico (RHP): Abreviar como RHP, incluir fecha, folio, médico que realizó y descripción.
+                   - Laboratorios: Formato ESTRICTAMENTE LINEAL y en párrafo continuo. Agrúpalos por fecha completa (DD.MM.AAAA). REGLA ESTRICTA: NO interpretes los resultados (prohibido usar términos como elevado, disminuido o normal) a menos que el médico haya dictado explícitamente los rangos de referencia, en cuyo caso pon los rangos entre paréntesis junto al valor.
+                   - Gabinetes e Imagen y Reportes Histopatológicos: Formato ESTRICTAMENTE LINEAL y en párrafo continuo. NO uses saltos de línea, viñetas ni listas hacia abajo. Escribe todo de corrido, separado solo por puntos y comas.
+                     - USG Tiroides/Cuello: Fecha (DD.MM.AAAA) y región. Describir medidas de LTD, LTI e ISTMO. Si hay nódulos, numéralos con letras (ej. Nódulo A). Por cada nódulo detalla: medida, composición, ecogenicidad, forma, márgenes y focos ecogénicos. Calcula y anota el ACR TI-RADS.
+                     - TAC/RM: Fecha (DD.MM.AAAA), región, si es simple o contrastada, medidas, masas, afección de vía visual y escalas (Knosp/Hardy).
+                     - Reporte Histopatológico (RHP): Abreviarlo como RHP, incluir fecha, folio, médico que realizó y descripción de forma lineal.
                      - Otros estudios (gammagrama, rastreo, etc.): Fecha y descripción dictada.
                 
                 3. A: ANÁLISIS:
                    - Integra los datos según el motivo de envío y guías clínicas actualizadas.
-                   - Diabetes: Define si hay excelente control o descontrol glucémico usando metas ADA 2026. Ajusta el análisis a metas de tercera edad o embarazo si aplica.
-                   - Tiroides: Define si el paciente está clínica y bioquímicamente eutiroideo, hipotiroideo o hipertiroideo. Menciona metas en embarazo si aplica.
+                   - Diabetes: Define si hay excelente control o descontrol glucémico usando metas ADA 2026. Ajusta a metas de tercera edad o embarazo si aplica.
+                   - Tiroides: Define si el paciente está clínica y bioquímicamente eutiroideo, hipotiroideo o hipertiroideo.
                    - Cáncer de Tiroides: Estadifica usando AJCC-8 y guías ATA 2025. Especifica claramente el tipo de respuesta: Excelente, Indeterminada, Bioquímica incompleta o Estructural incompleta.
-                   - Otras comorbilidades (ej. Dislipidemia, alteraciones hidroelectrolíticas): Indica si está en metas y sugiere seguimiento o valoración basada en guías si el médico no lo especifica.
+                   - Otras comorbilidades: Indica si está en metas y sugiere seguimiento o valoración basada en guías si no se especifica.
                 
                 4. P: PLAN:
                    - Recomendaciones de estilo de vida y alimenticias.
-                   - Medicamentos: Nombre, dosis, vía de administración y recomendaciones de toma.
+                   - Medicamentos: Nombre, dosis, vía de administración y recomendaciones.
                    - Envíos o interconsultas.
-                   - Estudios de laboratorio o gabinete a solicitar para la próxima consulta.
+                   - Estudios a solicitar.
                    
                 NO inventes datos, medidas ni medicamentos que no se mencionen en el audio. Si falta información para algún apartado, omítelo sin inventar relleno.
                 """
