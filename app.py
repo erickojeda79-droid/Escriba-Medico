@@ -11,7 +11,7 @@ modelo = genai.GenerativeModel('gemini-2.5-flash')
 
 # DISEÑO DE LA INTERFAZ
 st.title("Mi Escriba Médico AI 🩺🎙️")
-st.write("Sube tu audio o graba en vivo para generar la nota clínica compacta y lineal.")
+st.write("Sube tu audio o graba en vivo para generar la nota clínica avanzada.")
 st.divider()
 
 modo = st.radio("¿Cómo quieres ingresar el audio?", ["Subir archivo desde mi computadora", "Grabar en vivo con el micrófono"])
@@ -38,7 +38,7 @@ st.divider()
 
 if st.button("Generar Nota Clínica"):
     if audio_para_procesar is not None:
-        with st.spinner("Procesando audio y redactando nota lineal... ⏳"):
+        with st.spinner("Procesando audio con lógica endocrinológica avanzada... ⏳"):
             try:
                 fecha_hoy = datetime.now().strftime("%d de %B del %Y")
                 
@@ -48,35 +48,43 @@ if st.button("Generar Nota Clínica"):
                     
                 archivo_gemini = genai.upload_file(ruta_temporal, mime_type=tipo_de_archivo)
                 
-                # INSTRUCCIÓN CLÍNICA ULTRA-COMPACTA
+                # INSTRUCCIÓN CLÍNICA REFINADA
                 instruccion = f"""
-                Eres un médico endocrinólogo e internista experto. La fecha de hoy es {fecha_hoy}.
-                Escucha esta grabación y redacta una nota clínica SOAP profesional pero ULTRA-COMPACTA.
+                Eres un médico endocrinólogo e internista experto en Culiacán. La fecha de hoy es {fecha_hoy}.
+                Escucha esta grabación y redacta una nota clínica SOAP profesional y ultra-compacta.
                 
-                REGLAS CRÍTICAS DE FORMATO (PROHIBIDO USAR LISTAS O VIÑETAS):
+                REGLAS DE ORO (PROHIBICIONES ESTRICTAS):
+                1. OMISIÓN SILENCIOSA: Si un dato (Signos vitales, USG, DEXA, RHP, Cáncer, FRAX) NO se menciona en el audio, NO lo menciones. PROHIBIDO usar frases como "No se refiere", "No hay datos" o "No cuenta con". Si no está, no existe en la nota.
+                2. NO INVENTAR: Está estrictamente prohibido inventar cifras de tensión arterial, peso, frecuencia o cualquier dato clínico.
+                3. PROHIBIDO VIÑETAS: No uses listas de bolitas ni números. Usa párrafos continuos.
                 
-                1. S: SUBJETIVO: 
-                   Todo en párrafos continuos. Inicia: "Paciente [Femenina/Masculino] de [Edad] años. Motivo de envío: [Motivo]. Enviado por: [Especialidad]." 
-                   Sigue con antecedentes (APP, APNP, AHF, AGO) y padecimiento actual, todo sin viñetas.
+                LÓGICA CLÍNICA:
+                - Si el paciente toma LEVOTIROXINA: Incluye "Hipotiroidismo" en sus antecedentes (APP).
+                - Lógica de Género: Si se mencionan AGO (FUM, embarazos, gestas), asume que es "Femenina" aunque no se diga el sexo explícitamente.
                 
-                2. O: OBJETIVO (TODO EN UN SOLO BLOQUE DE TEXTO):
-                   - Exploración física y signos vitales en un solo renglón.
-                   - LABORATORIOS Y CÁLCULOS FUSIONADOS: Escribe los laboratorios de forma lineal. Si calculas algo (TFG CKD-EPI 2021, No-HDL, LDL, FRAX pobl. mexicana), ponlo INMEDIATAMENTE después del laboratorio que le dio origen, en el mismo renglón. 
-                     Ejemplo: "Laboratorios 19.03.2026: Glucosa 105 mg/dL, Creatinina 0.8 mg/dL (TFG CKD-EPI 2021: 110 mL/min), Colesterol Total 200, HDL 50 (No-HDL: 150), HbA1c 10.9%."
-                   - GABINETES E IMAGEN LINEALES: Todo en párrafo continuo, separado por puntos y comas. Incluye USG (LTD, LTI, Itsmo, Nódulos A/B/C con ACR TI-RADS), RM/TAC y RHP.
-                   - DEXA: Fecha, TS, DMO y Nadir de corrido.
+                ESTRUCTURA OBLIGATORIA:
+                
+                1. S: SUBJETIVO (Párrafo continuo): 
+                   - Inicia: "Paciente [Femenina/Masculino] de [Edad] años. Motivo de envío: [Motivo]. Enviado por: [Especialidad]."
+                   - APP (Antecedentes Personales Patológicos): Incluye diagnósticos y cirugías con su tiempo de evolución.
+                   - APNP (Antecedentes Personales No Patológicos): Especificar Tabaquismo, Etilismo (tiempo y cantidad) y ALERGIAS (especificar a qué sustancia y reacción).
+                   - AGO (Antecedentes Gineco-obstétricos): Solo en mujeres. Incluir Menarca, FUM, G, P, A, C y MPF en el orden dictado.
+                   - Padecimiento actual: Evolución cronológica de síntomas.
+                
+                2. O: OBJETIVO (Párrafo continuo):
+                   - Exploración física y signos vitales (SOLO los mencionados).
+                   - Laboratorios y Cálculos (Lineal): Nombre y valor. Sin interpretaciones ("bajo/alto").
+                   - Cálculos automáticos: Si hay datos, calcula TFG (CKD-EPI 2021), No-HDL, LDL y FRAX (México). Pon el cálculo entre paréntesis después del valor base.
+                   - Imagen/DEXA/RHP: Solo si se dictan, en formato lineal separado por puntos y comas. USG con medidas de LTD, LTI, Istmo y Nódulos con ACR TI-RADS.
                 
                 3. A: ANÁLISIS (Párrafo continuo):
-                   Estratifica el riesgo cardiovascular según AACE 2025 (PREVENT-ASCVD/GLOBO RISK) y riesgo de fractura según AACE/Endocrine Society.
-                   Estadifica Cáncer de Tiroides (AJCC-8 y ATA 2025 con tipo de respuesta).
+                   - Estratifica Riesgo CV (AACE 2025) y riesgo de fractura (AACE/Endocrine 2020).
+                   - Diagnósticos integrados (Diabetes ADA 2026, Tiroides/Cáncer ATA 2025 con tipo de respuesta).
                 
-                4. P: PLAN (Párrafo continuo):
-                   Manejo no farmacológico, medicamentos (dosis/vía/recomendación) y estudios solicitados.
-                
-                ESTRICTAMENTE PROHIBIDO:
-                - No uses bolitas (viñetas) ni listas numeradas.
-                - No uses el encabezado "Cálculos Automáticos" como sección separada; intégralos en los laboratorios.
-                - No dejes espacios en blanco excesivos entre secciones.
+                4. P: PLAN (Separado por saltos de línea, SIN viñetas):
+                   Estilo de vida: [Recomendaciones]
+                   Tratamiento farmacológico: [Dosis, vía, frecuencia, recomendaciones de toma]
+                   Seguimiento: [Cita y estudios solicitados]
                 """
                 
                 respuesta = modelo.generate_content([instruccion, archivo_gemini])
