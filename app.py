@@ -11,7 +11,7 @@ modelo = genai.GenerativeModel('gemini-2.5-flash')
 
 # DISEÑO DE LA INTERFAZ
 st.title("Mi Escriba Médico AI 🩺🎙️")
-st.write("Sube tu audio o graba en vivo para generar la nota clínica con cálculos automáticos (TFG, Lípidos, FRAX).")
+st.write("Sube tu audio o graba en vivo para generar la nota clínica compacta y lineal.")
 st.divider()
 
 modo = st.radio("¿Cómo quieres ingresar el audio?", ["Subir archivo desde mi computadora", "Grabar en vivo con el micrófono"])
@@ -38,7 +38,7 @@ st.divider()
 
 if st.button("Generar Nota Clínica"):
     if audio_para_procesar is not None:
-        with st.spinner("Procesando audio y realizando cálculos clínicos avanzados... ⏳"):
+        with st.spinner("Procesando audio y redactando nota lineal... ⏳"):
             try:
                 fecha_hoy = datetime.now().strftime("%d de %B del %Y")
                 
@@ -48,39 +48,35 @@ if st.button("Generar Nota Clínica"):
                     
                 archivo_gemini = genai.upload_file(ruta_temporal, mime_type=tipo_de_archivo)
                 
-                # INSTRUCCIÓN CLÍNICA ENDOCRINOLÓGICA INTEGRAL
+                # INSTRUCCIÓN CLÍNICA ULTRA-COMPACTA
                 instruccion = f"""
                 Eres un médico endocrinólogo e internista experto. La fecha de hoy es {fecha_hoy}.
-                Escucha esta grabación y redacta una nota clínica SOAP altamente profesional.
+                Escucha esta grabación y redacta una nota clínica SOAP profesional pero ULTRA-COMPACTA.
                 
-                REGLAS DE CÁLCULO Y CONTENIDO:
+                REGLAS CRÍTICAS DE FORMATO (PROHIBIDO USAR LISTAS O VIÑETAS):
                 
-                1. S: SUBJETIVO:
-                   - Inicia: Paciente [Femenina/Masculino] de [Edad] años. Motivo de envío: [Motivo]. Enviado por: [Especialidad].
-                   - Antecedentes en orden: APP, APNP, AHF y AGO (G, P, A, C, FUM, MPF).
-                   - Padecimiento actual: Evolución, síntomas, localización, atenuantes y agravantes.
+                1. S: SUBJETIVO: 
+                   Todo en párrafos continuos. Inicia: "Paciente [Femenina/Masculino] de [Edad] años. Motivo de envío: [Motivo]. Enviado por: [Especialidad]." 
+                   Sigue con antecedentes (APP, APNP, AHF, AGO) y padecimiento actual, todo sin viñetas.
                 
-                2. O: OBJETIVO (Formato LINEAL y Continuo):
-                   - Exploración física y signos vitales.
-                   - Laboratorios con Cálculos Automáticos: 
-                     a) Si se menciona CREATININA, calcula la Tasa de Filtrado Glomerular (TFG) usando CKD-EPI 2021 (sin raza).
-                     b) Perfil Lipídico: Calcula Colesterol NO-HDL (Total - HDL). Calcula LDL (Friedewald: CT - HDL - TG/5) solo si los datos están presentes y TG < 400. Si el LDL ya fue dictado, prioriza el dictado.
-                     c) Anota los resultados lineales por fecha (DD.MM.AAAA).
-                   - DEXA y FRAX: Fecha, TS, DMO, segmento, NADIR. Calcula FRAX (Población Mexicana) a 10 años para fractura mayor y cadera.
-                   - Imagen/Gabinetes: USG (LTD, LTI, ISTMO, Nódulos A, B, C con ACR TI-RADS), RM/TAC (Simple/Contrastada, medidas, masas, vía visual, Knosp/Hardy), RHP (Folio, médico, descripción). TODO LINEAL.
+                2. O: OBJETIVO (TODO EN UN SOLO BLOQUE DE TEXTO):
+                   - Exploración física y signos vitales en un solo renglón.
+                   - LABORATORIOS Y CÁLCULOS FUSIONADOS: Escribe los laboratorios de forma lineal. Si calculas algo (TFG CKD-EPI 2021, No-HDL, LDL, FRAX pobl. mexicana), ponlo INMEDIATAMENTE después del laboratorio que le dio origen, en el mismo renglón. 
+                     Ejemplo: "Laboratorios 19.03.2026: Glucosa 105 mg/dL, Creatinina 0.8 mg/dL (TFG CKD-EPI 2021: 110 mL/min), Colesterol Total 200, HDL 50 (No-HDL: 150), HbA1c 10.9%."
+                   - GABINETES E IMAGEN LINEALES: Todo en párrafo continuo, separado por puntos y comas. Incluye USG (LTD, LTI, Itsmo, Nódulos A/B/C con ACR TI-RADS), RM/TAC y RHP.
+                   - DEXA: Fecha, TS, DMO y Nadir de corrido.
                 
-                3. A: ANÁLISIS:
-                   - Riesgo Cardiovascular (AACE 2025): Utiliza las herramientas PREVENT-ASCVD o GLOBO RISK para estimar el riesgo. Estratifica al paciente en categorías de riesgo (Bajo, Moderado, Alto, Muy Alto o Extremo) según la Guía AACE 2025 para el manejo farmacológico de dislipidemia.
-                   - Diabetes/Tiroides/Cáncer: Control según ADA 2026. Estadifica AJCC-8 y ATA 2025 (Respuesta Excelente, Indeterminada, Bioquímica o Estructural Incompleta).
-                   - Salud Ósea: Riesgo según AACE/ACE 2020.
+                3. A: ANÁLISIS (Párrafo continuo):
+                   Estratifica el riesgo cardiovascular según AACE 2025 (PREVENT-ASCVD/GLOBO RISK) y riesgo de fractura según AACE/Endocrine Society.
+                   Estadifica Cáncer de Tiroides (AJCC-8 y ATA 2025 con tipo de respuesta).
                 
-                4. P: PLAN:
-                   - Manejo NO Farmacológico: Dieta y estilo de vida basados en el riesgo calculado.
-                   - Manejo Farmacológico: Sugerencias de tratamiento según las guías AACE 2025 y metas de control.
-                   - Medicamentos: Nombre, dosis, vía y recomendaciones.
-                   - Envíos y estudios solicitados.
-                   
-                IMPORTANTE: Si no tienes datos para un cálculo (ej. falta el peso para FRAX o el HDL para No-HDL), NO menciones el cálculo.
+                4. P: PLAN (Párrafo continuo):
+                   Manejo no farmacológico, medicamentos (dosis/vía/recomendación) y estudios solicitados.
+                
+                ESTRICTAMENTE PROHIBIDO:
+                - No uses bolitas (viñetas) ni listas numeradas.
+                - No uses el encabezado "Cálculos Automáticos" como sección separada; intégralos en los laboratorios.
+                - No dejes espacios en blanco excesivos entre secciones.
                 """
                 
                 respuesta = modelo.generate_content([instruccion, archivo_gemini])
