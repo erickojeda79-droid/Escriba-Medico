@@ -11,7 +11,7 @@ modelo = genai.GenerativeModel('gemini-2.5-flash')
 
 # DISEÑO DE LA INTERFAZ
 st.title("Mi Escriba Médico AI 🩺🎙️")
-st.write("Sube tu audio o graba en vivo para generar la nota clínica avanzada.")
+st.write("Escriba Inteligente para Endocrinología y Medicina Interna.")
 st.divider()
 
 modo = st.radio("¿Cómo quieres ingresar el audio?", ["Subir archivo desde mi computadora", "Grabar en vivo con el micrófono"])
@@ -38,7 +38,7 @@ st.divider()
 
 if st.button("Generar Nota Clínica"):
     if audio_para_procesar is not None:
-        with st.spinner("Procesando audio con lógica endocrinológica avanzada... ⏳"):
+        with st.spinner("Redactando nota integral y avanzada... ⏳"):
             try:
                 fecha_hoy = datetime.now().strftime("%d de %B del %Y")
                 
@@ -48,43 +48,41 @@ if st.button("Generar Nota Clínica"):
                     
                 archivo_gemini = genai.upload_file(ruta_temporal, mime_type=tipo_de_archivo)
                 
-                # INSTRUCCIÓN CLÍNICA REFINADA
+                # INSTRUCCIÓN CLÍNICA DEFINITIVA (MANTIENE TODO LO CONSTRUIDO)
                 instruccion = f"""
-                Eres un médico endocrinólogo e internista experto en Culiacán. La fecha de hoy es {fecha_hoy}.
-                Escucha esta grabación y redacta una nota clínica SOAP profesional y ultra-compacta.
+                Eres un médico endocrinólogo e internista experto. La fecha de hoy es {fecha_hoy}.
+                Escucha esta grabación y redacta una nota clínica SOAP ultra-compacta y profesional.
                 
-                REGLAS DE ORO (PROHIBICIONES ESTRICTAS):
-                1. OMISIÓN SILENCIOSA: Si un dato (Signos vitales, USG, DEXA, RHP, Cáncer, FRAX) NO se menciona en el audio, NO lo menciones. PROHIBIDO usar frases como "No se refiere", "No hay datos" o "No cuenta con". Si no está, no existe en la nota.
-                2. NO INVENTAR: Está estrictamente prohibido inventar cifras de tensión arterial, peso, frecuencia o cualquier dato clínico.
-                3. PROHIBIDO VIÑETAS: No uses listas de bolitas ni números. Usa párrafos continuos.
-                
-                LÓGICA CLÍNICA:
-                - Si el paciente toma LEVOTIROXINA: Incluye "Hipotiroidismo" en sus antecedentes (APP).
-                - Lógica de Género: Si se mencionan AGO (FUM, embarazos, gestas), asume que es "Femenina" aunque no se diga el sexo explícitamente.
+                REGLAS DE ORO (PROHIBICIONES):
+                1. SÍNTESIS EXTREMA: Filtra anécdotas, problemas de farmacia, IMSS o referencias. Quédate solo con lo médicamente relevante.
+                2. OMISIÓN SILENCIOSA: Si un dato, estudio (DEXA, USG), cálculo (FRAX) o enfermedad NO se menciona en el audio, OMÍTELO POR COMPLETO. PROHIBIDO escribir frases de relleno como "No se cuenta con...", "No refiere...".
+                3. NO INVENTAR: No inventes cifras de TA, peso o laboratorios.
+                4. TERMINOLOGÍA: Usa "Diabetes Tipo 2" o "DT2".
                 
                 ESTRUCTURA OBLIGATORIA:
                 
                 1. S: SUBJETIVO (Párrafo continuo): 
-                   - Inicia: "Paciente [Femenina/Masculino] de [Edad] años. Motivo de envío: [Motivo]. Enviado por: [Especialidad]."
-                   - APP (Antecedentes Personales Patológicos): Incluye diagnósticos y cirugías con su tiempo de evolución.
-                   - APNP (Antecedentes Personales No Patológicos): Especificar Tabaquismo, Etilismo (tiempo y cantidad) y ALERGIAS (especificar a qué sustancia y reacción).
-                   - AGO (Antecedentes Gineco-obstétricos): Solo en mujeres. Incluir Menarca, FUM, G, P, A, C y MPF en el orden dictado.
-                   - Padecimiento actual: Evolución cronológica de síntomas.
+                   - Inicia: "Paciente [Femenina/Masculino] de [Edad] años. Motivo: [Motivo]. Enviado por: [Especialidad]."
+                   - APP: Incluye enfermedades, tiempo de diagnóstico, medicamentos actuales con dosis y apego. Menciona hospitalizaciones previas. NO hagas lista aparte de medicamentos. Lógica: Si toma levotiroxina, asume hipotiroidismo.
+                   - APNP: Tabaquismo, Etilismo (tiempo/cantidad) y ALERGIAS (sustancia y reacción).
+                   - AGO (Solo mujeres): FUM, menarca, G, P, A, C. (Asume femenina si hay FUM o gestas).
+                   - Padecimiento Actual: Resumen conciso, síntomas, evolución, mejora/empeora.
                 
-                2. O: OBJETIVO (Párrafo continuo):
-                   - Exploración física y signos vitales (SOLO los mencionados).
-                   - Laboratorios y Cálculos (Lineal): Nombre y valor. Sin interpretaciones ("bajo/alto").
-                   - Cálculos automáticos: Si hay datos, calcula TFG (CKD-EPI 2021), No-HDL, LDL y FRAX (México). Pon el cálculo entre paréntesis después del valor base.
-                   - Imagen/DEXA/RHP: Solo si se dictan, en formato lineal separado por puntos y comas. USG con medidas de LTD, LTI, Istmo y Nódulos con ACR TI-RADS.
+                2. O: OBJETIVO (Párrafo continuo y lineal):
+                   - EF y Signos vitales (Solo los mencionados).
+                   - Laboratorios y Cálculos: Formato lineal. Nombre y valor (Sin "alto/bajo"). Calcula TFG (CKD-EPI 2021), No-HDL, LDL y FRAX (México) si hay datos, ponlo entre paréntesis junto al valor.
+                   - Imagen/DEXA/RHP: Solo si se dictan. Formato lineal. USG con medidas y ACR TI-RADS. DEXA con TS, DMO, segmento y NADIR. RM/TAC/RHP de corrido.
                 
                 3. A: ANÁLISIS (Párrafo continuo):
-                   - Estratifica Riesgo CV (AACE 2025) y riesgo de fractura (AACE/Endocrine 2020).
-                   - Diagnósticos integrados (Diabetes ADA 2026, Tiroides/Cáncer ATA 2025 con tipo de respuesta).
+                   - No repitas género/edad literal. Usa "Paciente de la X década...". Integra diagnósticos.
+                   - DIABETES Y RIESGO CV: Estado de control según ADA 2026 (Metas: Ayuno 70-130, HbA1c <7%). Estratifica Riesgo CV (AACE 2025 usando PREVENT-ASCVD/GLOBO RISK) y justifica manejo.
+                   - TIROIDES Y CÁNCER: Define estado (eutiroideo/hipo/hiper). Estadifica cáncer usando AJCC-8 y guías ATA 2025 (Respuesta Excelente, Indeterminada, Bioquímica o Estructural Incompleta).
+                   - SALUD ÓSEA: Riesgo de fractura según guías AACE/Endocrine Society 2020.
                 
                 4. P: PLAN (Separado por saltos de línea, SIN viñetas):
-                   Estilo de vida: [Recomendaciones]
-                   Tratamiento farmacológico: [Dosis, vía, frecuencia, recomendaciones de toma]
-                   Seguimiento: [Cita y estudios solicitados]
+                   Estilo de vida: Educación, dieta, ejercicio.
+                   Tratamiento farmacológico: [Un medicamento por renglón con dosis, vía y horario].
+                   Seguimiento: Cita y estudios solicitados.
                 """
                 
                 respuesta = modelo.generate_content([instruccion, archivo_gemini])
@@ -93,6 +91,7 @@ if st.button("Generar Nota Clínica"):
                 st.markdown("### Resultado:")
                 st.write(respuesta.text)
                 
+                # Limpieza de memoria
                 os.remove(ruta_temporal)
                 genai.delete_file(archivo_gemini.name)
                 
